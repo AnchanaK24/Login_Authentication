@@ -1,4 +1,5 @@
-from flask import Flask, request,jsonify,make_response
+import json
+from flask import Flask, request,make_response
 from flask_sqlalchemy import  SQLAlchemy
 
 app=Flask(__name__)
@@ -9,33 +10,36 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(80),unique=True,nullable=True)
     name=db.Column(db.String(50))
     password=db.Column(db.String(80))
 
+
 class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(50))
-    user_id= db.Column(db.Integer)
+    user_email=db.Column(db.String(50),primary_key=True)
 
-@app.route('/user',methods=['GET'])
-def get_user():
-    users=User.query.all()
-    output=[]
-    for user in users:
-        user_data={}
-        user_data['name']=user.name
-        user_data['password'] = user.password
-        output.append(user_data)
-    return jsonify({'users':output})
+@app.route('/user/<email>',methods=['GET'])
+def get_user(email):
+    email=request.form.get(email)
+    user=User.query.filter_by(email=email).first()
 
+    if  not user:
+        return make_response({'Message':'User not found'})
+
+    data = request.get_json()
+    name=data['name']
+    password=data['password']
+    return make_response({'name':name,'password':password})
 
 @app.route('/user',methods=['POST'])
 def create_user():
     data=request.get_json()
     password =data['password']
-    new_user=User(name=data['name'],password=password)
+    email=data['email']
+    new_user=data['name']
 
-    return jsonify({'message':'New User Created'})
+    return make_response({'message':'New User Created'})
 
 
 if __name__ ==  '__main__':
