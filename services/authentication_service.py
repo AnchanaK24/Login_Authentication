@@ -1,6 +1,6 @@
 import json
 
-import jwt
+
 
 from helpers.exceptions import UserNotFoundException
 from flask import session
