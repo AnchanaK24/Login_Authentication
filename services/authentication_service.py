@@ -1,6 +1,11 @@
-from helpers.exceptions import UserNotFoundException
+import json
 
-from models.user import User
+import jwt
+
+from helpers.exceptions import UserNotFoundException
+from flask import session
+from models import User
+
 
 
 class AuthenticationService:
@@ -26,10 +31,8 @@ class AuthenticationService:
         if user.password != password:
             raise UserNotFoundException(message="User Not Found ..!!!!")
 
-        response = {
-            "user_id": user.id
-        }
-
+        else:
+            response = {"user_id": user.id}
         return response
 
     @staticmethod
@@ -47,7 +50,16 @@ class AuthenticationService:
             data.append(user_dict)
         return data
 
-    @staticmethod
-    def get_user_by_mail_id(mail_id):
-        user = User.query.filter_by(mail_id=mail_id).first()
-        return user
+    @classmethod
+    def verify_user(cls, payload):
+        mail_id = payload.get('mail_id')
+        password = payload.get('password')
+        user = User.get_user_by_mail_id(mail_id=mail_id)
+
+        if user.password == password:
+            session[mail_id]=mail_id
+            response=({"Message":"Sucessfully Logined"})
+            return response
+
+        else:
+            raise UserNotFoundException(message="User Not Found ..!!!!")
