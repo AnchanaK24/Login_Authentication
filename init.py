@@ -15,6 +15,7 @@ logging.basicConfig(
 
 def init_app():
     app = Flask(__name__)
+    app.secret_key=['thisissecret']
     app.config['SQLALCHEMY_DATABASE_URI'] = CONFIG['SQLALCHEMY_DATABASE_URI']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = CONFIG['SQLALCHEMY_TRACK_MODIFICATIONS']
     db.init_app(app)
