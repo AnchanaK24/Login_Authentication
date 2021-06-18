@@ -1,10 +1,7 @@
-import json
-
-
-
-from helpers.exceptions import UserNotFoundException
 from flask import session
+from helpers.exceptions import UserNotFoundException
 from models import User
+import uuid
 
 
 
@@ -28,12 +25,13 @@ class AuthenticationService:
         password = payload.get('password')
         user = User.get_user_by_mail_id(mail_id=mail_id)
 
-        if user.password != password:
-            raise UserNotFoundException(message="User Not Found ..!!!!")
-
+        if user.password == password:
+            session[mail_id]=mail_id
+            session_id = str(uuid.uuid4())
+            response={"session_id":session_id}
+            return response
         else:
-            response = {"user_id": user.id}
-        return response
+            raise UserNotFoundException(message="User Not Found ..!!!!")
 
     @staticmethod
     def get_all_users():
@@ -50,16 +48,3 @@ class AuthenticationService:
             data.append(user_dict)
         return data
 
-    @classmethod
-    def verify_user(cls, payload):
-        mail_id = payload.get('mail_id')
-        password = payload.get('password')
-        user = User.get_user_by_mail_id(mail_id=mail_id)
-
-        if user.password == password:
-            session[mail_id]=mail_id
-            response=({"Message":"Sucessfully Logined"})
-            return response
-
-        else:
-            raise UserNotFoundException(message="User Not Found ..!!!!")
