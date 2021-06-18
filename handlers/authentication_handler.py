@@ -1,6 +1,6 @@
 import json
 
-from flask import request,Blueprint,make_response
+from flask import request,Blueprint
 from status import Status
 from helpers.exceptions import UserNotFoundException
 from services.authentication_service import AuthenticationService
@@ -23,7 +23,6 @@ def get_users():
     return json.dumps({"users": users}), Status.HTTP_200_OK
 
 
-
 @AUTHENTICATION.route('/sign-in', methods=['POST'])
 def sign_in():
     try:
@@ -34,12 +33,3 @@ def sign_in():
     except UserNotFoundException as e:
         return json.dumps({"message": e.message})
 
-@AUTHENTICATION.route('/verify-user', methods=['POST'])
-def verify_user():
-    try:
-        payload = request.get_json(force=True)
-        response = AuthenticationService.verify_user(payload=payload)
-        return json.dumps(response), Status.HTTP_200_OK
-
-    except UserNotFoundException as e:
-        return json.dumps({"message": e.message})
