@@ -50,3 +50,5 @@ class Session(db.Model):
     name = db.Column(db.String(128))
     mail_id = db.Column(db.String(128))
     password = db.Column(db.String(128))
+    
+    __tablename__="session"
