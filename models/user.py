@@ -52,6 +52,6 @@ class Session(db.Model):
     __tablename__='session'
 
     @staticmethod
-    def create_session(session):
-        ses = session
+    def create_session(Session):
+        ses = Session
         return ses
