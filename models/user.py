@@ -1,5 +1,4 @@
 import uuid
-
 from models import db
 
 
@@ -50,5 +49,9 @@ class Session(db.Model):
     name = db.Column(db.String(128))
     mail_id = db.Column(db.String(128))
     password = db.Column(db.String(128))
-    
-    __tablename__="session"
+    __tablename__='session'
+
+    @staticmethod
+    def create_session(session):
+        ses = session
+        return ses
