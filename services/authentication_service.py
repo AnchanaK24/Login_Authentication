@@ -26,9 +26,9 @@ class AuthenticationService:
         user = User.get_user_by_mail_id(mail_id=mail_id)
 
         if user.password == password:
-            session[mail_id]=mail_id
             session_id = str(uuid.uuid4())
-            response={"session_id":session_id}
+            session_id=session_id
+            response= session_id
             return response
         else:
             raise UserNotFoundException(message="User Not Found ..!!!!")
