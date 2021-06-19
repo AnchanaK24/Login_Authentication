@@ -1,6 +1,5 @@
-from flask import session
 from helpers.exceptions import UserNotFoundException
-from models import User
+from models import User,Session
 import uuid
 
 
@@ -27,7 +26,12 @@ class AuthenticationService:
 
         if user.password == password:
             session_id = str(uuid.uuid4())
-            session_id=session_id
+            ses = Session(
+                session_id=session_id,
+                mail_id=payload.get('mail_id'),
+                name=payload.get('name')
+            )
+            Session.create_session(ses)
             response= session_id
             return response
         else:
