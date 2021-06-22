@@ -1,7 +1,12 @@
+
 from helpers.exceptions import UserNotFoundException
+from flask import session
 from models import User,Session
 import uuid
 
+
+def token_id(args):
+    pass
 
 
 class AuthenticationService:
@@ -25,14 +30,16 @@ class AuthenticationService:
         user = User.get_user_by_mail_id(mail_id=mail_id)
 
         if user.password == password:
+            session[mail_id]=[mail_id]
             session_id = str(uuid.uuid4())
             ses = Session(
                 session_id=session_id,
                 mail_id=payload.get('mail_id'),
-                name=payload.get('name')
+                name=payload.get('name'),
+                token_id=token_id
             )
             Session.create_session(ses)
-            response= session_id
+            response=session_id
             return response
         else:
             raise UserNotFoundException(message="User Not Found ..!!!!")
