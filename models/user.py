@@ -49,6 +49,7 @@ class Session(db.Model):
     name = db.Column(db.String(128))
     mail_id = db.Column(db.String(128))
     password = db.Column(db.String(128))
+    token_id=db.Column(db.String(128),  unique=True,default=lambda: str(uuid.uuid4()))
     __tablename__='session'
 
     @staticmethod
