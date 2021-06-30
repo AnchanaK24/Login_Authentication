@@ -32,4 +32,11 @@ def sign_in():
 
     except UserNotFoundException as e:
         return json.dumps({"message": e.message})
+    
+@AUTHENTICATION.route('/token', methods= ['POST'])
+def verify_user():
+        data = request.get_json()
+        response = Loginservice.verify_user()
+        return json.dumps(response)
+
 
